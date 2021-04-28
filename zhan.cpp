@@ -8,6 +8,7 @@
 #define OK 1
 typedef char ElemType;
 using namespace std;
+int num = 0;
 
 // 栈
 typedef struct SqStack //顶指针 + 底指针 + 大小
@@ -37,11 +38,11 @@ int Push(stack &s,ElemType e)
 }
 
 // 出栈
-int Pop(stack &s,ElemType e)
+int Pop(stack &s,ElemType *e)
 {
     if(s.base == s.top)
         return ERROR;
-    e = *--s.top;
+    *e = *--s.top;
     return OK;
 }
 
@@ -87,39 +88,42 @@ typedef struct SqQueue
 }queue;
 
 // 初始化队列
-void InitQueue(queue &q)
+int InitQueue(queue &q)
 {
 
     q.base = new ElemType[MAXSIZE];
+    if(!q.base) exit(OVERFLOW);
     q.front = 0;
     q.rear  = 0;
+    return OK;
 }
 
 // 进队
 int Push(queue &q,ElemType e)
 {
-    if(q.front == MAXSIZE)
-        return OVERFLOW;
-    q.base[q.front++] = e;
+    if((q.rear + 1)%MAXSIZE == q.front) 
+        return ERROR;
+    q.base[q.rear] = e;
+    q.rear = (q.rear+1)%MAXSIZE;
+
+	num++;
     return OK;
 }
 
 // 出队
-int Pop(queue &q,ElemType e)
+int Pop(queue &q,ElemType *e)
 {
-    if(q.front == 0)
+    if(q.front == q.rear)
         return ERROR;
-    for(int i = 0;i<q.front;i++){
-        q.base[i] = q.base[i+1];
-    }
-    q.front--;
+    *e = q.base[q.front];
+    q.front = (q.front + 1)%MAXSIZE;
     return OK;
 }
 
 // 判断队空
 int QueueEmpty(queue q)
 {
-    if(q.front == 0)
+    if(q.front == q.rear)
         return OK;
     return 0;
 }
@@ -131,6 +135,7 @@ int QueueDestroy(queue &q)
     {
         delete q.base;
         q.front = 0;
+        q.rear = 0;
         q.base = NULL;
     }
     return OK;
@@ -139,10 +144,68 @@ int QueueDestroy(queue &q)
 // 取队列长度
 int QueueGetLength(queue q)
 {
-    return q.front + 1;
+    return (q.rear - q.front + MAXSIZE)%MAXSIZE;
 }
 
+char getAZ()
+{
+	char c = char(97+rand()%26);
+	// printf("%c\n",c);
+	return c;
+}
 
 int main(){
+    stack s;
+    queue q;
+	int i;
+	char temp;
+
+    InitStack(s);
+    InitQueue(q);
+
+    char a[MAXSIZE];
+    for(i = 0;i<MAXSIZE;i++)
+    {
+        a[i] = getAZ();
+		printf("%c  ",a[i]); 
+		// 入栈
+        Push(s,a[i]);
+    }
+	printf("\n");
+
+	for(i = 0;i<MAXSIZE;i++)
+	{
+		// 出栈
+		Pop(s,&temp);
+		// 入队列
+		Push(q,temp);
+
+		// 出队列
+		Pop(q,&temp);
+		// 入队列
+		Push(q,temp);
+		// 出队列
+		Pop(q,&temp);
+		// 入队列
+		Push(q,temp);
+	}
+	
+	for(i = 0;i<MAXSIZE;i++)
+	{
+		// 出队列
+		Pop(q,&temp);
+		// 入栈
+        Push(s,a[i]);
+	}
+
+	for(i = 0;i<MAXSIZE;i++)
+	{
+		// 出栈
+		Pop(s,&temp);
+		printf("%c  ",temp);
+	}
+	
+	// printf("%d",StackLength(s));
+	printf("\n进队的次数为:%d\n",num);
     return 0;
 }
