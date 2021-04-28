@@ -45,6 +45,14 @@ stack Pop(stack &s,ElemType e)
     return OK;
 }
 
+// 取栈顶元素
+int StackGetTop(stack s,ElemType &e)
+{
+    if(s.top == s.base) return ERROR;
+    e = *(s.top -1);
+    return OK;
+}
+
 // 判断栈空
 int StackEmpty(stack s)
 {
@@ -59,7 +67,7 @@ int StackLength(stack s)
 }
 
 // 销毁栈
-int StackDestory(stack &s)
+int StackDestroy(stack &s)
 {
     if(s.base)
     {
@@ -73,19 +81,33 @@ int StackDestory(stack &s)
 // 队列
 typedef struct SqQueue
 {
-
+    ElemType *base;
+    int front;
+    int rear;
 }queue;
+
 // 初始化队列
-queue InitQueue(queue q);
+queue InitQueue(queue &q)
+{
+    q->base = ElemType[MAXSIZE];
+    q->front = 0;
+    q->rear  = 0;
+}
+
 // 进队
-queue Push(queue q);
+queue Push(queue &q,ElemType e);
+
 // 出队
-queue Pop(queue q);
+queue Pop(queue &q,ElemType e);
+
 // 判断队空
 int QueueEmpty(queue q);
-// 销毁队列
-int QueueDestory(queue q);
 
+// 销毁队列
+int QueueDestroy(queue &q);
+
+// 取队列长度
+int QueueGetLength(queue q);
 
 
 int main(){
