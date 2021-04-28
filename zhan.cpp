@@ -4,7 +4,7 @@
 #define MAXSIZE 100
 #define ERROR 0
 #define F 0
-#define OVERFLOW 0
+// #define OVERFLOW 0
 #define OK 1
 typedef char ElemType;
 using namespace std;
@@ -18,7 +18,7 @@ typedef struct SqStack //顶指针 + 底指针 + 大小
 }stack;
 
 // 初始化
-stack InitStack(stack &s)
+int InitStack(stack &s)
 {
     s.base = new ElemType[MAXSIZE];
     if(!s.base) return OVERFLOW;
@@ -28,7 +28,7 @@ stack InitStack(stack &s)
 }
 
 // 压栈
-stack Push(stack &s,ElemType e)
+int Push(stack &s,ElemType e)
 {
     if(s.top - s.base == s.stacksize)
         return ERROR;
@@ -37,7 +37,7 @@ stack Push(stack &s,ElemType e)
 }
 
 // 出栈
-stack Pop(stack &s,ElemType e)
+int Pop(stack &s,ElemType e)
 {
     if(s.base == s.top)
         return ERROR;
@@ -73,7 +73,7 @@ int StackDestroy(stack &s)
     {
         delete s.base;
         s.stacksize = 0;
-        s.top = NULL；
+        s.top = NULL;
     }
     return OK;
 }
@@ -87,56 +87,59 @@ typedef struct SqQueue
 }queue;
 
 // 初始化队列
-queue InitQueue(queue &q)
+void InitQueue(queue &q)
 {
-    q->base = ElemType[MAXSIZE];
-    q->front = 0;
-    q->rear  = 0;
+
+    q.base = new ElemType[MAXSIZE];
+    q.front = 0;
+    q.rear  = 0;
 }
 
 // 进队
-queue Push(queue &q,ElemType e)
+int Push(queue &q,ElemType e)
 {
-    if(q->front == MAXSIZE)
+    if(q.front == MAXSIZE)
         return OVERFLOW;
-    q->base[front++] = e;
+    q.base[q.front++] = e;
     return OK;
 }
 
 // 出队
-queue Pop(queue &q,ElemType e)
+int Pop(queue &q,ElemType e)
 {
-    if(q->front == 0)
+    if(q.front == 0)
         return ERROR;
-    for(int i = 0;i<q->front;i++){
-        q->base[i] = q->base[i+1];
+    for(int i = 0;i<q.front;i++){
+        q.base[i] = q.base[i+1];
     }
-    q->front--;
+    q.front--;
     return OK;
 }
 
 // 判断队空
 int QueueEmpty(queue q)
 {
-    if(q->front == 0)
-        return OK
+    if(q.front == 0)
+        return OK;
     return 0;
 }
 
 // 销毁队列
 int QueueDestroy(queue &q)
 {
-    free((*q)->front);
-	free(*q);
-	*q = NULL;
-
+    if(q.base)
+    {
+        delete q.base;
+        q.front = 0;
+        q.base = NULL;
+    }
     return OK;
 }
 
 // 取队列长度
 int QueueGetLength(queue q)
 {
-    return q->front + 1;
+    return q.front + 1;
 }
 
 
