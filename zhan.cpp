@@ -95,19 +95,49 @@ queue InitQueue(queue &q)
 }
 
 // 进队
-queue Push(queue &q,ElemType e);
+queue Push(queue &q,ElemType e)
+{
+    if(q->front == MAXSIZE)
+        return OVERFLOW;
+    q->base[front++] = e;
+    return OK;
+}
 
 // 出队
-queue Pop(queue &q,ElemType e);
+queue Pop(queue &q,ElemType e)
+{
+    if(q->front == 0)
+        return ERROR;
+    for(int i = 0;i<q->front;i++){
+        q->base[i] = q->base[i+1];
+    }
+    q->front--;
+    return OK;
+}
 
 // 判断队空
-int QueueEmpty(queue q);
+int QueueEmpty(queue q)
+{
+    if(q->front == 0)
+        return OK
+    return 0;
+}
 
 // 销毁队列
-int QueueDestroy(queue &q);
+int QueueDestroy(queue &q)
+{
+    free((*q)->front);
+	free(*q);
+	*q = NULL;
+
+    return OK;
+}
 
 // 取队列长度
-int QueueGetLength(queue q);
+int QueueGetLength(queue q)
+{
+    return q->front + 1;
+}
 
 
 int main(){
