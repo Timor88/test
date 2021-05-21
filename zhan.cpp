@@ -207,5 +207,6 @@ int main(){
 	
 	// printf("%d",StackLength(s));
 	printf("\n进队的次数为:%d\n",num);
+	printf("队头下标为:%d\n",q.front);
     return 0;
 }
